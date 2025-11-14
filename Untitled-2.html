@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Угадай число — Премиум версия 🎯</title>
+
+  <style>
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      background: radial-gradient(circle, #6dd5fa, #3498db);
+      margin: 0;
+      text-align: center;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    header, footer {
+      background-color: rgba(0,0,0,0.25);
+      padding: 15px;
+      font-size: 1.4em;
+      font-weight: bold;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background: rgba(255,255,255,0.15);
+      padding: 10px;
+      backdrop-filter: blur(5px);
+    }
+
+    nav a {
+      color: white;
+      margin: 0 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-shadow: 0 0 10px #ffffff;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      min-height: 65vh;
+    }
+
+    section {
+      background: rgba(255,255,255,0.95);
+      color: #333;
+      padding: 35px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      width: 400px;
+      opacity: 0;
+      display: none;
+      transition: .4s;
+    }
+
+    section.active {
+      display: block;
+      opacity: 1;
+    }
+
+    input {
+      padding: 12px;
+      width: 70%;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 2px solid #3498db;
+      outline: none;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: #2980b9;
+      color: white;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: .2s;
+    }
+
+    button:hover {
+      background: #1f6b99;
+      transform: scale(1.08);
+    }
+
+    #message {
+      font-size: 20px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* ✨ Победная анимация текста */
+    .win {
+      animation: winFlash 1s infinite;
+    }
+    @keyframes winFlash {
+      0% { color: green; transform: scale(1); }
+      50% { color: gold; transform: scale(1.2); }
+      100% { color: green; transform: scale(1); }
+    }
+
+    /* Конфетти */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>🎯 Угадай число — Играй и побеждай!</header>
+
+<nav>
+  <a href="#game">Игра</a>
+  <a href="#contacts">Контакты</a>
+</nav>
+
+<main>
+
+  <section id="game" class="active">
+    <h2>Попробуй угадать число!</h2>
+    <p id="attemptsText">Попытки: 0</p>
+    <input type="number" id="guess" min="1" max="100" placeholder="Ваш вариант">
+    <br>
+    <button id="checkBtn">Проверить</button>
+    <p id="message"></p>
+    <button id="restartBtn" style="display:none;">Играть снова</button>
+  </section>
+
+  <section id="contacts">
+    <h2>Контакты</h2>
+    <p>Автор: Якубович Николай</p>
+    <p>Email: VTKWEB.kz</p>
+  </section>
+
+</main>
+
+<footer>© 2025 | VTK-K все права защищены </footer>
+
+<script>
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = document.querySelectorAll('main section');
+
+  let randomNumber = Math.floor(Math.random() * 100) + 1;
+  let attempts = 0;
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').substring(1);
+
+      sections.forEach(sec => sec.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    });
+  });
+
+  function createConfetti() {
+    for (let i = 0; i < 50; i++) {
+      const conf = document.createElement('div');
+      conf.classList.add('confetti');
+      conf.style.left = Math.random() * 100 + "vw";
+      conf.style.background = `hsl(${Math.random()*360}, 100%, 50%)`;
+      conf.style.animationDuration = (Math.random()*2 + 3) + "s";
+      document.body.appendChild(conf);
+      setTimeout(() => conf.remove(), 5000);
+    }
+  }
+
+  document.getElementById('checkBtn').addEventListener('click', () => {
+    const guess = Number(document.getElementById('guess').value);
+    const message = document.getElementById('message');
+    const restartBtn = document.getElementById('restartBtn');
+
+    if (!guess || guess < 1 || guess > 100) {
+      message.textContent = 'Введите число от 1 до 100!';
+      message.style.color = 'red';
+      return;
+    }
+
+    attempts++;
+    document.getElementById('attemptsText').textContent = `Попытки: ${attempts}`;
+
+    if (guess === randomNumber) {
+      message.textContent = `🎉 Победа! Загаданное число ${randomNumber}!`;
+      message.classList.add('win');
+
+      restartBtn.style.display = 'inline-block';
+
+      createConfetti(); // эффект конфетти
+    } 
+    else if (guess < randomNumber) {
+      message.textContent = '📈 Загаданное число больше';
+      message.style.color = '#f39c12';
+    } 
+    else {
+      message.textContent = '📉 Загаданное число меньше';
+      message.style.color = '#f39c12';
+    }
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+    attempts = 0;
+    document.getElementById('attemptsText').textContent = 'Попытки: 0';
+    document.getElementById('message').textContent = '';
+    document.getElementById('message').classList.remove('win');
+    document.getElementById('guess').value = '';
+    document.getElementById('restartBtn').style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
