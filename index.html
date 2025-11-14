@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Угадай число — Премиум версия 🎯</title>
+</head>
+<body>
+
+<header>🎯 Угадай число — Играй и побеждай!</header>
+
+<nav>
+  <a href="#game">Игра</a>
+  <a href="#contacts">Контакты</a>
+</nav>
+
+<main>
+
+  <section id="game" class="active">
+    <h2>Попробуй угадать число!</h2>
+    <p id="attemptsText">Попытки: 0</p>
+    <input type="number" id="guess" min="1" max="100" placeholder="Ваш вариант">
+    <br>
+    <button id="checkBtn">Проверить</button>
+    <p id="message"></p>
+    <button id="restartBtn" style="display:none;">Играть снова</button>
+  </section>
+
+  <section id="contacts">
+    <h2>Контакты</h2>
+    <p>Автор: Якубович Николай</p>
+    <p>Email: VTKWEB.kz</p>
+  </section>
+
+</main>
+
+<footer>© 2025 | VTK-K все права защищены </footer>
+<script src="script.js"></script>
+
+</body>
+</html>
